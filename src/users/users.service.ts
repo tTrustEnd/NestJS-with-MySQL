@@ -2,13 +2,14 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, QueryFailedError, Repository, getConnection } from 'typeorm';
+import { DataSource, Like, QueryFailedError, Repository, getConnection } from 'typeorm';
 import { User } from './entities/user.entity';
 import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 import aqp from 'api-query-params';
 import { IUser } from './entities/user.interface';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { Permission } from 'src/permissions/entities/permission.entity';
+import { query } from 'express';
 @Injectable()
 export class UsersService {
   constructor(
@@ -17,9 +18,11 @@ export class UsersService {
     @InjectRepository(Permission)
     private permissionsRepository: Repository<Permission>,
 
-    private dataSource: DataSource
+    private dataSource: DataSource,
   ) { }
 
+
+ 
   async findAll(query: string, current: number, pagesize: number) {
     const { filter } = aqp(query);
     const offset = (current - 1) * pagesize;
@@ -47,7 +50,7 @@ export class UsersService {
   async findOne(id: string) {
     try {
       const user = await this.usersRepository.findOneBy({ id })
-      const permissions = await this.permissionsRepository.find({where:{role:user.role}})
+      const permissions = await this.permissionsRepository.find({where:{role:Like(`%${user.role}%`)}})
       delete user.password;
       user.permissions=permissions
       return user;

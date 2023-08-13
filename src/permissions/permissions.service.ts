@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { IUser } from 'src/users/entities/user.interface';
@@ -7,13 +7,14 @@ import { Permission } from './entities/permission.entity';
 import { Repository } from 'typeorm';
 import { User } from './../../decorator/customize';
 import aqp from 'api-query-params';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class PermissionsService {
   constructor(@InjectRepository(Permission)
-  private permissionsRepository: Repository<Permission>,) { }
+  private permissionsRepository: Repository<Permission>) { }
 
-  async create(createPermissionDto: CreatePermissionDto, user: any) {
+  async create(createPermissionDto: CreatePermissionDto,@User() user: any) {
     const result = await this.permissionsRepository.save({ ...createPermissionDto, createdBy: user.username });
     if (result) {
       return result
@@ -74,7 +75,12 @@ export class PermissionsService {
     }
   }
   async findPermission(user) {
-    const permission = await this.permissionsRepository.find({ where: { role: user.role } })
-    return permission
+    if(user){
+      const permission = await this.permissionsRepository.find({ where: { role: user.role } })
+      return permission
+    }
+    else{
+      throw new UnauthorizedException("Sai thông tin đăng nhap")
+    }
   }
 }

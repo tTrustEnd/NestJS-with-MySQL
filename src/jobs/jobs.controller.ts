@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
@@ -28,19 +28,19 @@ export class JobsController {
   }
   @MESSAGERESPONSE("get jobs by id")
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id',new ParseUUIDPipe())  id: string) {
     return this.jobsService.findOne(id);
   }
 
   @Patch(':id')
   @MESSAGERESPONSE("update jobs")
-  update(@Param('id') id: string, @Body() updateJobDto: UpdateJobDto, @User() user: IUser) {
+  update(@Param('id',new ParseUUIDPipe()) id: string, @Body() updateJobDto: UpdateJobDto, @User() user: IUser) {
     return this.jobsService.update(id, updateJobDto, user);
   }
 
   @Delete(':id')
   @MESSAGERESPONSE("delete jobs ")
-  remove(@Param('id') id: string, @User() user: IUser) {
+  remove(@Param('id',new ParseUUIDPipe()) id: string, @User() user: IUser) {
     return this.jobsService.remove(id, user);
   }
 }

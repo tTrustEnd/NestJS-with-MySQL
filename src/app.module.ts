@@ -18,9 +18,14 @@ import { Permission } from './permissions/entities/permission.entity';
 import { DatabasesModule } from './databases/databases.module';
 import { MailModule } from './mail/mail.module'; 
 import { ScheduleModule } from '@nestjs/schedule';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
-  imports: [ConfigModule.forRoot({
+  imports: [CacheModule.register({
+     isGlobal: true ,
+     ttl:3
+    }),ConfigModule.forRoot({
+    envFilePath: ['.env', '.env.development'],
   ignoreEnvFile: true,
      isGlobal: true,
   }),ScheduleModule.forRoot(),
@@ -68,9 +73,9 @@ import { ScheduleModule } from '@nestjs/schedule';
     MailModule,
 
 
+
 ],
   controllers: [AppController],
   providers: [AppService,Logger],
 })
-  export class AppModule { 
-  }
+  export class AppModule { }

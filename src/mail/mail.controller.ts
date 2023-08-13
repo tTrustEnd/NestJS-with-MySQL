@@ -11,11 +11,11 @@ export class MailController {
   @Public()
   async handleTestEmail() {
     await this.mailerService.sendMail({
-      to: "truong.nq1857283@gmail.com",
+      to: "quochoan.hust.k63@gmail.com",
       from: '"HELLO" <banoianh1x@gmail.com>', // override default from
       subject: 'Welcome to Nice App! Confirm your Email',
       template: 'test',
-      context:{
+      context:{//
         name:"Trường nè"
       }
     });

@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express'
-import ms from 'ms';
 import { ConfigService } from '@nestjs/config';
 import { IUser } from 'src/users/entities/user.interface';
 import { Permission } from 'src/permissions/entities/permission.entity';

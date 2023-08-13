@@ -13,12 +13,6 @@ export const User = createParamDecorator(
     return request.user.user;
   },
 );
-// export const Cookies = createParamDecorator(
-//   (data: string, ctx: ExecutionContext) => {
-//     const request = ctx.switchToHttp().getRequest();
-//     return data ? request.cookies?.[data] : request.cookies;
-//   },
-// );
 import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
 
 @ValidatorConstraint({ name: 'isFileType', async: false })

@@ -6,8 +6,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Job } from './entities/job.entity';
 import { Repository } from 'typeorm';
 import aqp from 'api-query-params';
-import { BadRequestException } from '@nestjs/common/exceptions';
+import { BadRequestException, NotFoundException } from '@nestjs/common/exceptions';
 import { Company } from 'src/companies/entities/company.entity';
+import { Length } from 'class-validator';
 @Injectable()
 export class JobsService {
   constructor(
@@ -33,7 +34,7 @@ export class JobsService {
       skip: offset,
       take: pagesize,
     });
-    return {
+    if(jobs && jobs.length>0){return {
       meta: {
         current: current,
         pagesize: pagesize,
@@ -41,6 +42,9 @@ export class JobsService {
         total: total,
       },
       jobs
+    }}
+    else{
+      throw new NotFoundException("Không tìm thấy job")
     }
   }
 
@@ -52,7 +56,7 @@ export class JobsService {
       return job
 
     } catch (error) {
-      throw new BadRequestException("Không tìm thấy job")
+      throw new NotFoundException("Không tìm thấy job")
     }
   }
 

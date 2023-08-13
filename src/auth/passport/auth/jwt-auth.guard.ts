@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Injectable,
   Req,
+  Scope,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -28,13 +29,15 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
     return super.canActivate(context);
   }
-  // Add your custom authentication logic here
-  // for example, call super.logIn(request) to establish a session.
 
   handleRequest(err, user, info, context: ExecutionContext) {
     if (err || !user) {
       throw err || new UnauthorizedException("Token không hợp lệ vui lòng đăng nhập");
     }
+    //Nếu ta dùng getResponse thay vì Request thì dùng cái dưới .req để trỏ đến request
+    // const request2 = context.switchToHttp().getResponse();
+    // console.log(request2.req.route.path)
+
     const request = context.switchToHttp().getRequest();
     const apiPath = request.route.path
     const method = request.method;    
@@ -43,7 +46,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const isExix = isExis?.find(item => item===true);
     if(isExix){
       return user;
-    }else{
+    }else{//
      throw new BadRequestException("Bạn không có quyền truy cập enpoint này")
     }
 

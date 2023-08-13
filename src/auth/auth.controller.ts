@@ -23,6 +23,7 @@ export class AuthController {
     getProfile(@Req() req) {
       return req.user;
     }
+
     @Public()
     @Post('register')
     @MESSAGERESPONSE("register")

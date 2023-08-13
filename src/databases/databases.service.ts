@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DatabasesService {
@@ -11,10 +12,12 @@ export class DatabasesService {
     constructor(
       @InjectRepository(User) // Thay thế 'YourEntity' bằng tên entity thật của bạn
       private readonly usersRepository: Repository<User>,
-      private UsersService: UsersService, // Thay thế 'YourEntity' bằng tên entity thật của bạn
+      private UsersService: UsersService, 
+      private configService: ConfigService,// Thay thế 'YourEntity' bằng tên entity thật của bạn
     ) {}
   
     async onModuleInit() {
+      console.log('App running on port:',this.configService.get<string>('PORT'))//
       try {
         const count = await this.usersRepository.count();
         if (count === 0) {

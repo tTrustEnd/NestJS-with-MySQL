@@ -1,14 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
-import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { MESSAGERESPONSE, User } from 'decorator/customize';
 import { IUser } from 'src/users/entities/user.interface';
+import { UsersService } from 'src/users/users.service';
 
 
 @Controller('permissions')
 export class PermissionsController {
-  constructor(private readonly permissionsService: PermissionsService) {}
+  constructor(private readonly permissionsService: PermissionsService,
+    ) {}
 
   @Post()
   @MESSAGERESPONSE("Create a Permission")
@@ -19,6 +20,7 @@ export class PermissionsController {
   }
 
   @Get()
+  @MESSAGERESPONSE("get Permission with paginate")
   findAll(@Query() query:string,
   @Query("current") current:number,
   @Query("pagesize") pagesize:number,
@@ -27,17 +29,20 @@ export class PermissionsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  @MESSAGERESPONSE("find a Permission by id")
+  findOne(@Param('id',new ParseUUIDPipe()) id: string) {
     return this.permissionsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePermissionDto: UpdatePermissionDto,@User() user:IUser) {
+  @MESSAGERESPONSE("update a Permission")
+  update(@Param('id',new ParseUUIDPipe()) id: string, @Body() updatePermissionDto: UpdatePermissionDto,@User() user:IUser) {
     return this.permissionsService.update(id, updatePermissionDto,user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string,@User() user:IUser) {
+  @MESSAGERESPONSE("delete a Permission")
+  remove(@Param('id',new ParseUUIDPipe()) id: string,@User() user:IUser) {
     return this.permissionsService.remove(id,user);
   }
 }

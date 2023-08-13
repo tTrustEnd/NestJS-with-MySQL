@@ -1,11 +1,13 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
 import { PermissionsController } from './permissions.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Permission } from './entities/permission.entity';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Permission])],
+  imports: [TypeOrmModule.forFeature([Permission]),forwardRef(() => UsersModule)],
+  //forwardRef(() => UsersModule)dùng khi có sự phụ thuộc lặp giữa 2 thằng
   controllers: [PermissionsController],
   providers: [PermissionsService],
   exports: [TypeOrmModule,PermissionsService]

@@ -6,10 +6,10 @@ import { User } from './entities/user.entity';
 import { PermissionsModule } from 'src/permissions/permissions.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]),PermissionsModule],
-controllers: [UsersController],
-  providers: [UsersService, ],
-  exports: [TypeOrmModule,UsersService]
+  imports: [TypeOrmModule.forFeature([User]), PermissionsModule],
+  controllers: [UsersController],
+  providers: [UsersService,],
+  exports: [TypeOrmModule, UsersService]
 
 })
-export class UsersModule {}
+export class UsersModule { }

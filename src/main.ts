@@ -29,15 +29,16 @@ app.useGlobalInterceptors(new TransformInterceptor(reflector));
 
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: false,
+      whitelist: true,
       // disableErrorMessages: true,
-      // transform: true,
+      transform: true,
 
     }),
   );
+  
   const logger = new Logger(); // Tạo đối tượng LoggerService mới
   app.useLogger(logger); // Sử dụng LoggerService
-
+    
   app.setGlobalPrefix('api/v1');
   app.use(express.static(join(__dirname, '..', 'public')));
   await app.listen(configService.get<string>("PORT"));
